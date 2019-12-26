@@ -54,3 +54,38 @@ console.log('Реализовать цепочку протитопов с по�
 console.log(objSecondA, objSecondA.number, objSecondA.summ());
 console.log(objSecondB, objSecondB.__proto__, objSecondB.number, objSecondB.summ(), objSecondB.mult());
 console.log(objSecondC, objSecondC.__proto__, objSecondC.number, objSecondC.summ(), objSecondC.mult(), objSecondC.increm());
+
+// 3. Реализовать цепочку протитопов с помощью функций конструкторов..
+function ObjThirdA(number) {
+    this.number = number;
+    this.summ = function() {
+        return `${this.number} = Summ() is - ${this.number + this.number}`;
+    };
+}
+
+const objThirdA = new ObjThirdA(2);
+
+function ObjThirdB(number) {
+    this.number = number;
+    this.mult = function() {
+        return `${this.number} = Mult() is - ${this.number * this.number}`;
+    };
+}
+
+ObjThirdB.prototype = objThirdA;
+const objThirdB = new ObjThirdB(4);
+
+function ObjThirdC(number) {
+    this.number = number;
+    this.increm = function() {
+        return `${this.number} = Increm() is - ${this.number + 1}`;
+    };
+}
+
+ObjThirdC.prototype = objThirdB;
+const objThirdC = new ObjThirdC(6);
+
+console.log('Реализовать цепочку протитопов с помощью функций конструкторов.');
+console.log(objThirdA, objThirdA.__proto__, objThirdA.number, objThirdA.summ());
+console.log(objThirdB, objThirdB.__proto__, objThirdB.number, objThirdB.summ(), objThirdB.mult());
+console.log(objThirdC, objThirdC.__proto__, objThirdC.number, objThirdC.summ(), objThirdC.mult(), objThirdC.increm());
