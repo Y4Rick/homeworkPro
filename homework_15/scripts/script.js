@@ -63,26 +63,28 @@ function ObjThirdA(number) {
     };
 }
 
-const objThirdA = new ObjThirdA(2);
+ObjThirdB.prototype = Object.create(ObjThirdA.prototype);
+ObjThirdB.prototype.constructor = ObjThirdB;
 
 function ObjThirdB(number) {
-    this.number = number;
+    ObjThirdA.apply(this, arguments);
     this.mult = function() {
         return `${this.number} = Mult() is - ${this.number * this.number}`;
     };
 }
 
-ObjThirdB.prototype = objThirdA;
-const objThirdB = new ObjThirdB(4);
+ObjThirdC.prototype = Object.create(ObjThirdB.prototype);
+ObjThirdC.prototype.constructor = ObjThirdC;
 
 function ObjThirdC(number) {
-    this.number = number;
+    ObjThirdB.apply(this, arguments);
     this.increm = function() {
         return `${this.number} = Increm() is - ${this.number + 1}`;
     };
 }
 
-ObjThirdC.prototype = objThirdB;
+const objThirdA = new ObjThirdA(2);
+const objThirdB = new ObjThirdB(4);
 const objThirdC = new ObjThirdC(6);
 
 console.log('Реализовать цепочку протитопов с помощью функций конструкторов.');
