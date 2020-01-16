@@ -43,6 +43,7 @@ body {
   background-color: transparent;
   border: 2px solid lightgray;
   border-radius: 4px;
+  cursor: pointer;
 }
 .hamburger__item--big {
   background-color: bisque;
