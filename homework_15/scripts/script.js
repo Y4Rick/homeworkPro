@@ -1,99 +1,70 @@
 'use strict';
 
-initData();
-
 class Hamburger {
-    constructor(prise, calories) {
-        this.prise = prise;
-        this.calories = calories;
-        this.filling = new Filling(this);
-        this.additives = new Additives(this);
+
+    static SIZE_SMALL = {
+        prise: 50, 
+        calories: 20,
+    }
+
+    static SIZE_BIG = {
+        prise: 100, 
+        calories: 40,
+    }
+
+    static FILLING_CHEESE = {
+        prise: 10, 
+        calories: 20,
+    }
+
+    static FILLING_LARD = {
+        prise: 20, 
+        calories: 5,
+    }
+
+    static FILLING_POTATO = {
+        prise: 15, 
+        calories: 10,
+    }
+
+    static ADDICTIVES_FLAVOR = {
+        prise: 15, 
+        calories: 0,
+    }
+
+    static ADDICTIVES_MAYONNAiSE = {
+        prise: 20, 
+        calories: 5,
+    }
+
+    constructor(sise, filling) {
+        this.prise = sise.prise + filling.prise;
+        this.calories = sise.calories + filling.calories;
+    }
+
+    addAdditives(additive) {
+        this.prise = this.prise + additive.prise;
+        this.calories = this.calories + additive.calories;
+    }
+
+    addFillings(filling) {
+        this.prise = this.prise + filling.prise;
+        this.calories = this.calories + filling.calories;
     }
 }
 
-class Filling {
-    constructor(hamburger) {
-        this.hamburger = hamburger;
-    }
+console.log('Big Hamburger');
 
-    putCheese() {
-        this.hamburger.prise = this.hamburger.prise + 10;
-        this.hamburger.calories = this.hamburger.calories + 20;
-    }
+let bigHamburger = new Hamburger(Hamburger.SIZE_BIG, Hamburger.FILLING_CHEESE);
+console.log(bigHamburger);
 
-    putLard() {
-        this.hamburger.prise = this.hamburger.prise + 20;
-        this.hamburger.calories = this.hamburger.calories + 5;
-    }
+bigHamburger.addAdditives(Hamburger.ADDICTIVES_MAYONNAiSE);
+console.log(bigHamburger);
 
-    putPotato() {
-        this.hamburger.prise = this.hamburger.prise + 15;
-        this.hamburger.calories = this.hamburger.calories + 10;
-    }
-}
+console.log('Small Hamburger');
+let smallHamburger = new Hamburger(Hamburger.SIZE_SMALL, Hamburger.FILLING_POTATO);
+console.log(smallHamburger);
 
-class Additives {
-    constructor(hamburger) {
-        this.hamburger = hamburger;
-    }
-
-    putFlavoring() {
-        this.hamburger.prise = this.hamburger.prise + 15;
-        this.hamburger.calories = this.hamburger.calories + 0;
-    }
-
-    putMayonnaiseg() {
-        this.hamburger.prise = this.hamburger.prise + 20;
-        this.hamburger.calories = this.hamburger.calories + 5;
-    }
-}
-
-class BigHamburger extends Hamburger {
-    constructor(prise = 100, calories = 40) {
-        super(prise, calories);
-
-        this.filling.putCabbage = () => {
-            this.prise = this.prise + 5;
-            this.calories = this.calories + 0;
-        }
-
-        this.additives.putKetchup = () => {
-            this.prise = this.prise + 7;
-            this.calories = this.calories + 3;
-        }
-    }
-}
-
-class SmallHamburger extends Hamburger {
-    constructor(prise = 50, calories = 20) {
-        super(prise, calories);
-
-        this.filling.putCarrot = () => {
-            this.prise = this.prise + 4;
-            this.calories = this.calories + 0;
-        }
-
-        this.additives.putSourCream = () => {
-            this.prise = this.prise + 12;
-            this.calories = this.calories + 8;
-        }
-    }
-}
-
-function initData() {
-    const wrapper = document.querySelector('.wrapper');
-    wrapper.addEventListener("click", () => {
-        if (event && event.target.closest('.hamburger__item--big')) {
-            createOrder(event.target.closest('.hamburger__item--big'), new BigHamburger());
-        }
-
-        if (event && event.target.closest('.hamburger__item--small')) {
-            createOrder(event.target.closest('.hamburger__item--small'), new SmallHamburger());
-        }
-    })
-}
-
-function createOrder(element, order) {
-    console.log(element, order);
-    
-}
+smallHamburger.addAdditives(Hamburger.ADDICTIVES_FLAVOR);
+smallHamburger.addAdditives(Hamburger.ADDICTIVES_MAYONNAiSE);
+console.log(smallHamburger);
