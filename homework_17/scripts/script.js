@@ -33,11 +33,8 @@ var ADDICTIVES_MAYONNAiSE = {
     calories: 5,
 }
 
-var Hamburger = function (sise, filling) {
-    this.prise = sise.prise + filling.prise;
-    this.calories = sise.calories + filling.calories;
-
-    this.addAdditives = function (filling) {
+function HamburgerMethods() {
+    this.addAdditives = function(filling) {
         this.prise = this.prise + filling.prise;
         this.calories = this.calories + filling.calories;
     }
@@ -47,6 +44,15 @@ var Hamburger = function (sise, filling) {
         this.calories = this.calories + additive.calories;
     }
 }
+
+function Hamburger(sise, filling) {
+    HamburgerMethods.apply(this, arguments);
+    this.prise = sise.prise + filling.prise;
+    this.calories = sise.calories + filling.calories;
+}
+
+Hamburger.prototype = Object.create(HamburgerMethods.prototype);
+Hamburger.prototype.constructor = HamburgerMethods;
 
 console.log('Big Hamburger');
 var bigHamburger = new Hamburger(SIZE_BIG, FILLING_CHEESE);
