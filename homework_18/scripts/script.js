@@ -1,53 +1,74 @@
 var SIZE_SMALL = {
-    prise: 50,
+    price: 50,
     calories: 20,
 }
 
 var SIZE_BIG = {
-    prise: 100,
+    price: 100,
     calories: 40,
 }
 
 var FILLING_CHEESE = {
-    prise: 10,
+    price: 10,
     calories: 20,
 }
 
 var FILLING_LARD = {
-    prise: 20,
+    price: 20,
     calories: 5,
 }
   
 var FILLING_POTATO = {
-    prise: 15,
+    price: 15,
     calories: 10,
 }
 
 var ADDICTIVES_FLAVOR = {
-    prise: 15,
+    price: 15,
     calories: 0,
 }
 
 var ADDICTIVES_MAYONNAiSE = {
-    prise: 20,
+    price: 20,
     calories: 5,
 }
 
 function HamburgerMethods() {
     this.addAdditives = function(filling) {
-        this.prise = this.prise + filling.prise;
-        this.calories = this.calories + filling.calories;
+        this._prices.push(filling.price);
+        this._calories.push(filling.calories);
     }
 
     this.addFillings = function(additive) {
-        this.prise = this.prise + additive.prise;
-        this.calories = this.calories + additive.calories;
+        this._prices.push(additive.price);
+        this._calories.push(additive.calories);
+    }
+
+     this.calculateCalories = function() {
+        return this._calories.reduce((acc, calorie) => {
+            acc += calorie;
+            return acc;
+        }, this.calories);
+    }
+
+    this.calculatePrice = function() {
+        return this._prices.reduce((acc, price) => {            
+            acc += price;
+            return acc;
+        }, this.price);
+    }
+
+    this.confirmOrder = function() {
+        this.price = this.calculatePrice();
+        this.calories = this.calculateCalories();
     }
 }
 
 function Hamburger(sise, filling) {
     HamburgerMethods.apply(this, arguments);
-    this.prise = sise.prise + filling.prise;
+    this._prices = [];
+    this._calories = [];
+    this.price = sise.price + filling.price;
     this.calories = sise.calories + filling.calories;
 }
 
@@ -55,12 +76,18 @@ Hamburger.prototype = Object.create(HamburgerMethods.prototype);
 Hamburger.prototype.constructor = HamburgerMethods;
 
 console.log('Big Hamburger');
-var bigHamburger = new Hamburger(SIZE_BIG, FILLING_CHEESE);
-bigHamburger.addAdditives(ADDICTIVES_MAYONNAiSE);
+let bigHamburger = new Hamburger(SIZE_BIG, FILLING_CHEESE);
 console.log(bigHamburger);
 
-console.log('Small Hamburger');
-var smallHamburger = new Hamburger(SIZE_SMALL, FILLING_POTATO);
-smallHamburger.addAdditives(ADDICTIVES_FLAVOR);
-smallHamburger.addAdditives(ADDICTIVES_MAYONNAiSE);
-console.log(smallHamburger);
+bigHamburger.addAdditives(ADDICTIVES_MAYONNAiSE);
+console.log("Calories: " + bigHamburger.calculateCalories())
+console.log("Price: " + bigHamburger.calculatePrice());
+
+bigHamburger.addAdditives(ADDICTIVES_FLAVOR);
+console.log("Calories: " + bigHamburger.calculateCalories())
+console.log("Price: " + bigHamburger.calculatePrice());
+console.log(bigHamburger);
+
+console.log('Confirm!')
+bigHamburger.confirmOrder();
+console.log(bigHamburger);
