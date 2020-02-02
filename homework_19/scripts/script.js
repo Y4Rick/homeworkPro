@@ -1,6 +1,6 @@
 'use strict';
 
-class ToDOList {
+class ToDOListItem {
     constructor(text, done = false) {
         this._id = `f${(+new Date).toString(16)}`;
         this.text = text;
@@ -24,9 +24,12 @@ initData(GLOBAL_LIST, GLOBAL_MAP);
 
 function initData(global_list, collector) {
     global_list.listForm.addEventListener('submit', event => {
-        event.preventDefault();
-        createToDoListItem(collector, global_list, event.target.elements.namedItem('toDoListInput').value);
-        event.target.elements.namedItem('toDoListInput').value = '';
+        event.preventDefault();        
+        if (event.target.elements.namedItem('toDoListInput').value.length != 0) {
+            createToDoListItem(collector, event.target.elements.namedItem('toDoListInput').value);
+            renderToDoListItems(global_list, collector)
+            event.target.elements.namedItem('toDoListInput').value = '';
+        }
     });
 
     global_list.list.addEventListener('change', event => {
@@ -42,14 +45,20 @@ function initData(global_list, collector) {
     });
 }
 
-function createToDoListItem(collectorItems, list, value) {
-    const toDoListItem = new ToDOList(value);
+function createToDoListItem(collectorItems, value) {
+    const toDoListItem = new ToDOListItem(value);
     collectorItems.LIST_MAP_COLLECTOR.set(toDoListItem._id, toDoListItem);
     collectorItems.LIST_MAP_COLLECTOR_HISTORY.set(toDoListItem._id, toDoListItem);
-    createDOMListElement(list, toDoListItem);
 }
 
-function createDOMListElement(list, item) {
+function renderToDoListItems(list, collectorItems) {
+    list.listItemsBlock.innerHTML = '';
+    collectorItems.LIST_MAP_COLLECTOR.forEach(item => {
+        createDOMListElement(list, item)
+    })
+}
+
+function createDOMListElement(list, item) {    
     let frag = document.createDocumentFragment();
 
     let listItem = document.createElement('div');
@@ -79,6 +88,11 @@ function createDOMListElement(list, item) {
     listItemButtont.setAttribute('type', 'button');
     listItemButtont.innerHTML = `&times;`;
 
+    if (item.done) {
+        listItemCheckbox.setAttribute('checked', 'checked');
+        listItemText.classList.add('list__item-text-done');
+    }
+
     listItem.append(listItemCheckboxLabel);
     listItem.append(listItemText);
     listItem.append(listItemButtont);
@@ -90,8 +104,8 @@ function createDOMListElement(list, item) {
 
 function checkItem(collectorItems, item, value) {
     let textItem = item.querySelector('.list__item-text');
-    let keyItem = item.getAttribute('data-id');
-    let toDoItem = collectorItems.LIST_MAP_COLLECTOR.get(keyItem);
+    let itemKey = item.getAttribute('data-id');
+    let toDoItem = collectorItems.LIST_MAP_COLLECTOR.get(itemKey);
         toDoItem.done = value;
 
     if (value) {
@@ -104,9 +118,9 @@ function checkItem(collectorItems, item, value) {
 function deleteItem(collectorItems, item) {
     item.remove();
 
-    let keyItem = item.getAttribute('data-id');
-    let toDoItem = collectorItems.LIST_MAP_COLLECTOR.get(keyItem);
+    let itemKey = item.getAttribute('data-id');
+    let toDoItem = collectorItems.LIST_MAP_COLLECTOR.get(itemKey);
         toDoItem.status = 'removed';
 
-    collectorItems.LIST_MAP_COLLECTOR.delete(keyItem);
+    collectorItems.LIST_MAP_COLLECTOR.delete(itemKey);
 }
